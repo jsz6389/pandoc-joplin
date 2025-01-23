@@ -1,0 +1,16 @@
+{
+	"manifest_version": 1,
+	"id": "com.example.joplin-pandoc",
+	"app_min_version": "3.2",
+	"version": "1.0.0",
+	"name": "Joplin Pandoc",
+	"description": "Export notes to desired format using pandoc",
+	"author": "Jakob Zielinski",
+	"homepage_url": "",
+	"repository_url": "",
+	"keywords": [],
+	"categories": [],
+	"screenshots": [],
+	"icons": {},
+	"promo_tile": {}
+}

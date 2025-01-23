@@ -1,0 +1,713 @@
+27/04/2024 14:51
+
+If I spellcheck isn't working in Joplin, then I can go into Tools>Options>General>Enable Spellchecking in Markdown Editor. This feature is still in beta so isn't enabled by default.
+https://discourse.joplinapp.org/t/joplin-windows-spell-check-not-working/28549
+***
+27/04/2024 14:57
+
+I found a useful Joplin plugin that allows you to render charts from a table. There is a test of it below.
+https://discourse.joplinapp.org/t/plugin-turn-to-chart/21584
+https://github.com/Winbee/joplin-turn-to-chart
+```turnToChart
+|x|a|b|c|
+|-|-|-|-|
+|n|0|2|3|
+|m|2|1|3|
+|o|3|2|1|
+```
+By default, Joplin can use [Mermaid](#https://mermaid.js.org/#/) syntax to create flowcharts, however this seems overly complex and is probably not a feature that I will make heavy use of.
+
+***
+29/04/2024 10:34
+
+The [Better Code Blocks](https://discourse.joplinapp.org/t/plugin-better-code-blocks/32613) Joplin plugin isn't really one that is useful to me. All it does is hide the "\`\`\`" in the markdown editor, which is kind of annoying.
+
+If I want to apply code syntax to something, I can just do \`\`\`[language]. For example, an sql codeblock would be \`\`\`sql.
+
+***
+01/05/2024 22:30
+
+I want to rethink how I spend my time. I feel like I spend too much time on social media, specifically on short form content. When I get back from Florida, rather than committing to a change now, I'd like to start recording my daily activities so that I can understand what I need to cut back on.
+
+***
+02/05/2024 13:44
+
+Open Source Self Driving
+
+https://github.com/commaai/openpilot
+https://blog.comma.ai/self-driving-car-for-free/
+https://github.com/commaai/openpilot/blob/master/docs/CARS.md
+https://github.com/OSSDC
+https://warmcat.com/hardware%20design/hdmi/fpga/2015/10/20/hdmi-capture-and-analysis-fpga-project.html
+
+***
+02/05/2024 13:47
+
+Attack on Mac M series encryption https://gofetch.fail/
+
+***
+02/05/2024 14:36
+
+Raspberry PI Write Blocker
+
+- Pi 5 provides PCie so is fastest for hard drive connections
+
+https://github.com/msuhanov/Linux-write-blocker
+https://arace.tech/products/radxa-penta-sata-hat-up-to-5x-sata-disks-hat-for-raspberry-pi-5
+https://radxa.com/products/accessories/penta-sata-hat/#buy
+https://www.jeffgeerling.com/blog/2024/radxas-sata-hat-makes-compact-pi-5-nas
+https://www.adafruit.com/product/5813
+
+***
+05/05/2024 18:06
+
+Getting a japanese keyboard on arch/manjaro
+
+https://www.reddit.com/r/LearnJapanese/comments/ik64mb/a_guide_for_installing_a_japanese_input_method_on/
+
+The above guide is outdated. Here are the steps I followed.
+
+1. Install the following packages:
+```
+sudo pacman -S fcitx5 fcitx5-config-qt fcitx5-anthy
+```
+2. Set fcitx5 to autostart. Session and Startup>Application Autostart>Add>/usr/bin/fcitx5
+3. Add anthy to fcitx5. fcitx5 tray icon>configure>Input Method>Available Input Method>Anthy
+
+Sources:
+https://wiki.archlinux.org/title/Input_method#List_of_available_input_method_editors
+https://wiki.archlinux.org/title/Fcitx5
+***
+08/05/2024 19:49
+
+ibus is also a way of getting a japanese keyboard on linux
+
+```
+sudo pacman -S ibus ibus-anthy
+```
+
+~/.pam_environment
+```
+XMODIFIERS DEFAULT=@im=ibus
+GTK_IM_MODULE DEFAULT=ibus
+QT_IM_MODULE DEFAULT=ibus
+```
+***
+08/05/2024 21:09
+
+Setup flatpress with lighttpd:
+
+https://wiki.archlinux.org/title/Lighttpd
+```
+> sudo pacman -S lighttpd php-cgi fcgi
+```
+Copy the following config to /etc/lighttpd/conf.d/fastcgi.conf
+```
+# Make sure to install php and php-cgi. See:                                                             
+# https://wiki.archlinux.org/index.php/Fastcgi_and_lighttpd#PHP
+
+server.modules += ("mod_fastcgi")
+
+# FCGI server
+# ===========
+#
+# Configure a FastCGI server which handles PHP requests.
+#
+index-file.names += ("index.php")
+fastcgi.server = ( 
+    # Load-balance requests for this path...
+    ".php" => (
+        # ... among the following FastCGI servers. The string naming each
+        # server is just a label used in the logs to identify the server.
+        "localhost" => ( 
+            "bin-path" => "/usr/bin/php-cgi",
+            "socket" => "/tmp/php-fastcgi.sock",
+            # breaks SCRIPT_FILENAME in a way that PHP can extract PATH_INFO
+            # from it 
+            "broken-scriptfilename" => "enable",
+            # Launch (max-procs + (max-procs * PHP_FCGI_CHILDREN)) procs, where
+            # max-procs are "watchers" and the rest are "workers". See:
+            # https://wiki.lighttpd.net/frequentlyaskedquestions#How-many-php-CGI-processes-will-lighttpd-spawn 
+            "max-procs" => "4", # default value
+            "bin-environment" => (
+                "PHP_FCGI_CHILDREN" => "1" # default value
+            )
+        )
+    )   
+)
+```
+Add the following to /etc/lighttpd/lighttpd.conf
+```
+include = "conf.d/fastcgi.conf"
+```
+Download flatpress from https://www.flatpress.org/download and copy to /srv/http, then update permissions.
+```
+> sudo chown -R http /srv/http # Change permission to http user
+```
+***
+12/05/2024 14:53
+
+Enable middle-click scroll with Wayland
+
+https://www.reddit.com/r/linux4noobs/comments/m111ou/changing_middleclick_in_kde_wayland/
+
+```
+sudo libinput list-devices
+qdbus org.kde.KWin /org/kde/KWin/InputDevice/eventNN org.kde.KWin.InputDevice.scrollOnButtonDown true
+# NOTE: Replace eventNN with the event number from the first command
+```
+***
+12/05/2024 19:15
+
+Find and replace in vim
+
+Find foo and replace with bar
+
+```
+s/foo/bar/ # First occurence
+s/foo/bar/g # All in current line
+%s/foo/bar/g # All occurences in file
+```
+***
+18/05/2024 01:22
+
+Anthy/ibus runs like shit on Wayland. I need to find another solution.
+***
+18/05/2024 15:38
+
+[Exit handling in python](https://stackoverflow.com/questions/3850261/doing-something-before-program-exit)
+
+```py
+import atexit
+
+def exit_handler():
+    print('My application is ending!')
+
+atexit.register(exit_handler)
+```
+***
+18/05/2024 20:11
+
+[Enums in python](https://www.geeksforgeeks.org/enum-in-python/)
+
+```py
+from enum import Enum
+ 
+class Season(Enum):
+    SPRING = 1
+    SUMMER = 2
+    AUTUMN = 3
+    WINTER = 4
+print(Season.SPRING)
+print(Season.SPRING.name)
+print(Season.SPRING.value)
+print(type(Season.SPRING))
+print(repr(Season.SPRING))
+print(list(Season))
+```
+***
+19/05/2024 21:06
+
+Convert int to hex in python
+
+```py
+hex(156) # 0x5c
+```
+***
+23/05/2024 22:51
+
+Wishlist for new apartment
+- [ ] Soldering Station
+	- [ ] Soldering mat
+	- [ ] Pinecil
+	- [ ] Fan
+	- [ ] Arms
+	- [ ] Lamp/Magnifier
+- [ ] Shelves for organizing electronic parts
+- [x] Two large desks
+- [ ] Several Bookshelves
+- [ ] Folding couch
+- [ ] Trash can for living room/office
+- [ ] 
+
+NOTE: Moving this to its own page. [Wishlist](:/9b5aafb614c645df9f44e4f77ad43634)
+
+***
+26/05/2024 18:57
+
+https://docs.google.com/document/d/1Q6Dj9WAZxlfBhJSyS5on2rw3-if5cOV3oV-dQ3B0AHA
+https://www.reddit.com/r/curlyhair/comments/1bpv193/start_here_beginner_info_weekly_no_question_is/
+
+I want to try using the Curly Girl method for my hair. I found this guide on reddit. Basically its just using a sulfate free shampoo every once in a while, and then doing co-wash long-term. This is basically just the same method I'm doing now but with different products. Right now I'm trying VO5 clarifying shampoo/conditioner. Hopefully it works.
+
+***
+27/05/2024 13:10
+
+https://nownownow.com/ is a fun website that provides a good directory of people's personal blogs/websites
+
+***
+27/05/2024 15:39
+
+Correct permission for ssh:
+
+```txt
+.ssh			700
+id_rsa			600
+id_rsa.pub		600
+```
+
+Gibson IP addresses
+```
+173.233.64.250 - ssh on port 22
+173.233.64.253 - my personal ip address
+```
+
+Helpful SSH commands
+```bash
+ssh jakobz@173.233.64.250 -L 42069:localhost:5903 # port forwarding for vnc
+ssh jakobz@173.233.64.250 -L 42069:10.30.0.2:443 # port forwarding for pfsense
+ssh -o "IdentitiesOnly=yes" -i ~/.ssh/dell_id_rsa jakobz@173.233.64.250 # specify ssh private key to use when connecting
+```
+
+Allow ping of pfsense: https://geekistheway.com/2020/08/01/how-to-allow-ping-on-pfsense-wan/
+
+***A NOTE ON PORTS***
+
+Ports have been updated in Gibson to reflect user numbers, so my new port would be *5903*
+
+***
+27/05/2024 18:55
+
+Easy setup for LetsEncrypt HTTPS on ubuntu
+
+https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-ubuntu-20-04
+
+***
+27/05/2024 20:27
+
+I have had TikTok uninstalled for a few weeks now, and I feel that I am better off for it. I don't have much desire to go back, and I have been focusing a lot more on fulfilling projects. I thought being able to keep my thoughts organized here in Joplin has been a big help to me.
+
+***
+29/05/2024 17:33
+
+Currently my personal time is split between the following things:
+- Technical Projects
+- Studying Japanese
+- Researching for the trip to Japan
+- Gaming
+
+I have already managed to integrate Japanese study nicely into my daily routine. I find it challenging, however, to manage my time between the other three passions. Therefore, I would like to begin creating a daily schedule for the three, dedicating at least one day a week to them. This will leave will leave four days a week open to do as I please, and gives me the opportunity to pick up other hobbies if I so choose. 
+
+For gaming, I would also like to start streaming once I move into my new apartment. I already have a sufficient streaming setup, so this should be quite easy to accomplish. I would like to acquire a new graphics card, as that will make it easier to play more intensive games, though that will probably have to wait until I have my GS-9 in August.
+
+Earlier this month, I implemented a calendar-based system as detailed above, so I will integrate my three passions into this system starting in June. I will game on Mondays, since gaming requires the least thought and effort, I will research for Japan on Wednesdays, and I will work on technical projects on Fridays.
+
+***
+31/05/2024 22:53
+
+To get past the annoying domain verification in nextcloud, add the following argument to the initial docker run cmd:
+
+```
+--env SKIP_DOMAIN_VALIDATION=true
+```
+
+https://github.com/nextcloud/all-in-one#how-to-skip-the-domain-validation
+
+***
+01/06/2024 22:11
+
+Authentik can be used to place self-hosted services with no authentication behind a wall of authentication
+
+https://goauthentik.io/
+
+***
+07/06/2024 19:57
+
+Conda commands:
+```bash
+conda create --name 312 python=3.12 # create a python 3.12 environment
+conda activate 312 # activate the python 3.12 environment
+conda deactivate # deactivate the current environment
+```
+
+***
+11/06/2024 18:01
+
+Simple formula for finding the root directory in FAT partitions:
+
+(number of sectors in reserved area - 2 bytes from offset 0x0E in VBR) + (number of sectors in a FAT table - 2 bytes from offset 0x16 in VBR) * 2 = Offset to root directory from start of VBR
+
+***
+03/08/2024 10:05
+
+There are two big federal law enforcement agencies in Japan: the Public Security Intelligence Agency and the National Police Agency.
+
+https://en.wikipedia.org/wiki/Public_Security_Intelligence_Agency
+https://en.wikipedia.org/wiki/National_Police_Agency_(Japan)
+https://en.wikipedia.org/wiki/Law_enforcement_in_Japan
+
+***
+03/08/2024 10:09
+
+Groundbreaking ceremonies for new buildings in Japan are called Jichinsai. These ceremonies vary depending on whether they are based on Shinto or Buddhist tradition.
+
+https://www.japanesewiki.com/Shinto/Jichin-sai%20(ground-breaking%20ceremony).html
+
+***
+03/08/2024 10:11
+
+Jinja Honcho is a coalition of 80,000 Shinto shrines in Japan.
+
+https://www.jinjahoncho.or.jp/en/
+
+***
+07/08/2024 12:27
+
+Bypass Microsoft account requirement in Windows setup.
+
+```
+OOBE\BYPASSNRO
+```
+
+***
+07/08/2024 12:28
+
+Monitor SSD usage - CrystalDiskInfo
+
+***
+07/08/2024 12:28
+
+Firmware update for Tableau write blockers
+
+```
+www.opentext.com/products/tableau-download-center
+```
+
+***
+07/08/2024 12:29
+
+File signature resrouce
+
+https://www.garykessler.net/library/file_sigs.html
+
+***
+08/08/2024 19:17
+
+Installing Samba on linux
+
+https://ubuntu.com/tutorials/install-and-configure-samba#1-overview
+
+When creating a share, shares in system folders (i.e. /mnt) will probably give some permission error, like "access denied." It is easier just to make the share in the user's home directory.
+
+***
+11/08/2024 10:40
+
+Restore the old right-click context menu in windows 11
+
+https://answers.microsoft.com/en-us/windows/forum/all/restore-old-right-click-context-menu-in-windows-11/a62e797c-eaf3-411b-aeec-e460e6e5a82a
+```
+reg.exe add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
+```
+
+***
+11/08/2024 10:53
+
+https://github.com/Raphire/Win11Debloat
+
+A good Windows 11 debloat script I found. One feature I would add is making the file explorer show "this PC" instead of "Home" by default.
+
+Here is a script that should update the correct registry automatically for that.
+
+https://www.reddit.com/r/PowerShell/comments/13xl3gf/looking_for_a_script_to_change_file_explorer/
+
+```
+reg.exe ADD "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v LaunchTo /t REG_DWORD /d 00000001 /f 
+```
+
+***
+11/08/2024 15:06
+
+https://www.youtube.com/watch?v=tz5zwrQTG7U
+
+Sawada mansion is an apartment building that was built by a couple in Japan. It was built illegally, without any building permits.
+
+***
+11/08/2024 19:18
+
+Sosaku kanji. A contest where people design their own kanji.
+
+https://japantoday.com/category/features/lifestyle/original-kanji-contest-is-a-chance-to-leave-your-mark-on-the-japanese-language
+https://sousaku-kanji.com/
+
+***
+11/08/2024 20:31
+
+I am having trouble focusing on my goals again. This past weekend I've basically just sat around watching YouTube. When I don't have any time to myself its very easy to slip into a routine of watching an endless stream of mindless content on YouTube and Instagram. I have been watching many videos in Japanese, which is something I would like to continue doing. That being said, even just sitting and playing some game would be more enjoyable to me. On top of that I would like to spend more time studying Japanese. The problem is I haven't been able to settle on much of a routine ever since I completed Heisig. Since things have been so hectic, maybe I'll just settle for the immersion route and try to watch more videos in Japanese without subtitles. With me going to Germany in September, I can't really see myself developing a study routine that's more regimented than that. It's hard to believe, but pretty soon I'll be going to Japan again.
+
+***
+25/08/2024 10:22
+
+Concatenate files on Windows. This method only works in cmd, not powershell.
+
+```
+copy /b file1+file2+file3 outfile
+```
+
+***
+30/08/2024 19:39
+
+How to make Linux kernel modules get loaded by default. Put module name in `/etc/modules-load.d/modules.conf`
+
+***
+30/08/2024 19:41
+
+Mount point of SMB shares on Linux. `/run/user/UID/gvfs/`
+
+https://ubuntuforums.org/showthread.php?t=2241829
+
+***
+30/08/2024 19:42
+
+List locally installed packages in Arch. This generally shows AUR packages.
+
+`pacman -Qm`
+
+https://bbs.archlinux.org/viewtopic.php?id=76218
+
+***
+03/09/2024 17:04
+
+Windows prefetch basics
+
+https://isc.sans.edu/diary/Forensic+Value+of+Prefetch/29168/
+
+Stored at `C:\Windows\Prefetch\`
+
+Used to cache pieces of info about an application so that it can be launched quickly.
+
+Stores:
+- 8 last execution timestamps (subtract 10s from timestamps)
+- Run count
+- Created timestamp can be used to infer when the app was first run
+
+***
+03/09/2024 18:00
+
+Good summary of jumplists:
+
+https://www.forensafe.com/blogs/jumplist.html
+
+***
+03/09/2024 18:02
+
+Cracking truecrypt volumes with John the Ripper. Tried this with veracrypt, and it didn't work.
+
+https://floatingoctothorpe.uk/2017/cracking-truecrypt-volumes-with-john-the-ripper.html
+
+***
+03/09/2024 18:08
+
+ShagOS is an operating system created by an RIT alumnus as a research project. I discovered it because it is still listed as a partition type for MBR.
+
+https://www.csh.rit.edu/~shaggy/shagos.html
+
+***
+07/09/2024 22:31
+
+Recover older versions of PDFs
+
+https://github.com/enferex/pdfresurrect/tree/master
+
+pdfresurrect will parse various data in a PDF and recover older version automatically.
+
+It is also possible to do this manually.
+1. Open the PDF in notepad++
+2. Search for the `%EOF` marker
+3. Remove sections separated by this marker starting with the bottom of the file
+
+https://www.forensicfocus.com/forums/general/viewing-pdf-fragements/
+
+***
+07/09/2024 22:41
+
+Change type of all items in a list
+
+```py
+new_list = [str(n) for n in [1, 2, 3]] # Convert list of int to list of str
+```
+
+***
+28/09/2024 07:14
+
+ext4 superblock layout and offsets:
+
+https://ext4.wiki.kernel.org/index.php/Ext4_Disk_Layout
+
+***
+28/09/2024 11:52
+
+Windows notification forensics paper:
+
+https://www.mdpi.com/2673-6756/2/1/7
+
+The windows notification database can be found at `%APPDATA%\Local\Microsoft\Windows\Notifications\wpndatabase.db` 
+
+***
+28/09/2024 12:02
+
+Mullvad VPN finding
+
+Path to system appdata folder: `C:\Windows\system32\config\systemprofile\AppData`
+
+Inside `AppData\Local\MullvadVPN`, there is a file called `device.json`. This file contains the account token, id, and private key.
+
+There is also information stored in the user's appdata folder.
+
+***
+28/09/2024 13:03
+
+Powershell history location
+
+```
+C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Windows\\PowerShell\\PSReadline
+```
+
+***
+29/09/2024 10:08
+
+Windows upgrade history in the registry:
+
+https://www.tenforums.com/tutorials/106679-view-windows-upgrade-history-windows-10-a.html
+
+This can be found in the SYSTEM hive under the setup key.
+
+***
+29/09/2024 11:07
+
+Default web browser in registry:
+
+https://stackoverflow.com/questions/32354861/how-to-find-the-default-browser-via-the-registry-on-windows-10
+
+```
+HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\Shell\Associations\URLAssociations\(http|https)\UserChoice
+```
+
+***
+01/12/2024 07:56
+
+Getting brother printer to work on manjaro:
+
+pamac install brother-hll2350dw
+
+***
+27/12/2024 21:16
+
+Get terminal on USB serial device
+
+```
+sudo systemctl start serial-getty@ttyUSB0.service
+```
+
+Quick reference for the TRS-80 model 100:
+
+https://www.ordersomewherechaos.com/rosso/fetish/m102/web100/docs/m100-quickref.html
+
+To configure the terminal for 9600, 8, None, and 1, go to TELCOM and do the following command:
+
+```
+Stat 88N1E
+```
+
+Then type `Term` and there will be a terminal.
+
+Get just site text with links:
+
+```
+links -dump text.npr.org
+```
+
+Software directory for trs-80 model 100:
+
+https://www.willus.com/trs80/?q=
+
+Interesting videos/blogs related to trs-80 model 100:
+
+https://www.youtube.com/watch?v=BJiLvXKjQX8
+https://www.youtube.com/watch?v=exdiQdjioyQ
+https://typecast.munk.org/2014/07/25/file-transfer-for-trs-80-model-100102200-using-a-digital-audio-recorder-the-road-less-travelled/
+https://www.hoboes.com/Mimsy/hacks/model-100-data-transfer-script/less-primitive-model-100-data-transfer/
+
+Connecting an external monitor to the model 100?
+
+https://bitchin100.com/wiki/index.php?title=VT100
+
+***
+28/12/2024 11:57
+
+For trouble getting Manjaro XFCE to lock the screen on suspend, I simply add the following to startup commands:
+
+```bash
+light-locker --lock-on-suspend
+```
+
+***
+02/01/2025 12:50
+
+Turn off anti-aliasing in feh - press the A key
+
+***
+02/01/2025 12:51
+
+PS1 memory card editor - MemcardRex
+
+https://github.com/ShendoXT/memcardrex/releases/tag/792009b
+
+Allows you to import raw saves and convert them to MCR
+
+Be careful when editing save icons - it may corrupt some save files
+
+***
+02/01/2025 15:21
+
+Change default zoom level for PDFs in firefox. Change the following setting in `about:config`:
+
+```
+pdfjs.ignoreDestinationZoom = true
+pdfjs.defaultZoomValue = [insert desire value here]
+```
+***
+03/01/2025 14:30
+
+Cool elevation technique on Windows:
+- search for odbc
+- run odbc as administrator
+- click on tracing at the top
+- click Browse under Log File Path
+- navigate to cmd.exe
+- right click cmd.exe and run as administrator
+
+***
+06/01/2025 14:17
+
+Track prices of Amazon products over time
+
+https://camelcamelcamel.com/
+
+***
+07/01/2025 11:43
+
+woeusb is a utility for creating bootable Windows USB installers. It can be installed via the AUR.
+
+https://github.com/WoeUSB/WoeUSB
+
+***
+22/01/2025 20:52
+
+Disable obnoxious chatgpt popup
+
+https://www.reddit.com/r/uBlockOrigin/comments/1gaydpv/how_can_i_block_the_login_and_signup_popup_on/
+
+Add the following lines to ublock:
+```
+chatgpt.com##+js(set-session-storage-item, oai/apps/noAuthHasDismissedSoftRateLimitModal, true)
+```
